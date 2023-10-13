@@ -5,7 +5,8 @@ import org.bytedeco.opencv.global.opencv_imgproc;
 import org.bytedeco.opencv.opencv_core.*;
 import org.bytedeco.opencv.opencv_face.FacemarkKazemi;
 import org.bytedeco.opencv.opencv_objdetect.CascadeClassifier;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import static org.bytedeco.opencv.global.opencv_face.drawFacemarks;
 import static org.bytedeco.opencv.global.opencv_highgui.cvWaitKey;
 import static org.bytedeco.opencv.global.opencv_highgui.imshow;
@@ -19,6 +20,8 @@ import java.util.Objects;
 
 
 public class FaceMarkService extends MathAlgorithmExtension {
+    private static final Logger logger = LoggerFactory.getLogger(FaceMarkService.class);
+
 
     public static int[][] getFaceMarks(String PhotoNameAndLocation, String CreateMarkers)
         throws IOException, URISyntaxException, InterruptedException {
@@ -98,12 +101,8 @@ public class FaceMarkService extends MathAlgorithmExtension {
                         }
                     }
                 }
+                saveImageWithFacemarks(PhotoNameAndLocation, img, CreateMarkers);
 
-                if (CreateMarkers != null) {
-
-                    //Writing the image with the landmarks to a file
-                    imwrite("Photos/Face-mark Output/" + "Face-mark_Output_"+ PhotoNameAndLocation.substring(PhotoNameAndLocation.length()-8,PhotoNameAndLocation.length()-4) +".jpg", img);
-                }
                 return FacialCoordinates;
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -112,6 +111,14 @@ public class FaceMarkService extends MathAlgorithmExtension {
         }catch (Exception e){
             System.out.println("Error: " + e.getMessage());
             return null;
+        }
+    }
+
+    private static void saveImageWithFacemarks(String photoNameAndLocation, Mat img, String createMarkers) {
+        if (createMarkers != null) {
+            String outputFileName = "Face-mark_Output_"+ photoNameAndLocation.substring(photoNameAndLocation.length()-8, photoNameAndLocation.length()-4) +".jpg";
+            imwrite("Photos/Face-mark Output/" + outputFileName, img);
+            logger.info("Image saved at: {} with name: {}", "Photos/Face-mark Output/", outputFileName);
         }
     }
 
