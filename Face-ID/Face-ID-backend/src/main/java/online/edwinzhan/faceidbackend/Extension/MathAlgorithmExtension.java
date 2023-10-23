@@ -3,8 +3,8 @@ package online.edwinzhan.faceidbackend.Extension;
 public class MathAlgorithmExtension {
 
     /**
-     * Computes the centroid size of the points.
-     * @param points The points to be measured.
+     * Computes the centroid size of the points, which is the average of sum of distance
+     * @param points The faceMark points.
      * @return Centroid size.
      */
     public double computeCentroidSize(double[][] points) {
@@ -21,13 +21,13 @@ public class MathAlgorithmExtension {
      * @return Centroid coordinates.
      */
     public double[] computeCentroid(double[][] points) {
-        double[] centroid = new double[2]; // x, y
+        double[] centroid = new double[2]; //store the centroid.
         for (double[] point : points) {
-            centroid[0] += point[0];
-            centroid[1] += point[1];
+            centroid[0] += point[0];//get the sum of all x
+            centroid[1] += point[1];//get the sum of all y
         }
-        centroid[0] /= points.length;
-        centroid[1] /= points.length;
+        centroid[0] /= points.length;//average
+        centroid[1] /= points.length;//average
         return centroid;
     }
 
@@ -37,8 +37,8 @@ public class MathAlgorithmExtension {
      * @return Translated points.
      */
     public double[][] translatePointsToOrigin(double[][] points) {
-        double[] centroid = computeCentroid(points);
-        double[][] translatedPoints = new double[points.length][2];
+        double[] centroid = computeCentroid(points);//get the centroid
+        double[][] translatedPoints = new double[points.length][2];//store the new points x, y
         for (int i = 0; i < points.length; i++) {
             translatedPoints[i][0] = points[i][0] - centroid[0];
             translatedPoints[i][1] = points[i][1] - centroid[1];
@@ -52,8 +52,10 @@ public class MathAlgorithmExtension {
      * @return Scaled points.
      */
     public double[][] scalePoints(double[][] points) {
+        //get the CentroidSize as the scale constant
         double size = computeCentroidSize(points);
         double[][] scaledPoints = new double[points.length][2];
+        //scale Points to standard size of 1
         for (int i = 0; i < points.length; i++) {
             scaledPoints[i][0] = points[i][0] / size;
             scaledPoints[i][1] = points[i][1] / size;
